@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.loginservice.mapper.MemberMapper">
+    <resultMap id="userResultMap" type="Member">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="password" column="password"/>
+        <result property="userName" column="user_name"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
+    <select id="findUserByUserId"
+            parameterType="String"
+            resultMap="userResultMap">
+        SELECT
+            id,user_id,password, user_name, role
+        FROM
+            member
+        WHERE
+            user_id = ${userId}
+    </select>
+    <select id="checkUserIdExist" parameterType="String" resultType="int">
+        SELECT COUNT(id)
+        FROM member
+        WHERE user_id = #{userId}
+    </select>
+    <select id="checkNickNameExist" parameterType="String" resultType="int">
+        SELECT COUNT(id)
+        FROM member
+        WHERE nick_name = #{nickName}
+    </select>
+    <select id="findEMailId"
+            parameterType="com.example.loginservice.dto.EmailSearchDTO"
+            resultType="int">
+        SELECT
+           count(id)
+        FROM
+            member
+        WHERE
+            user_name =  #{userName} and email_provider = #{emailProvider}
+    </select>
+    <insert id="saveUser"
+            parameterType="Member">
+        INSERT INTO member (user_id, password, user_name, role,nick_name,email)
+        VALUES (#{userId}, #{password}, #{userName}, #{role},#{nickName},#{email});
+    </insert>
+    <insert id="saveEmailUser"
+            parameterType="Member">
+        INSERT INTO member (user_id, user_name, role, email_provider, nick_name,email)
+        VALUES (#{userId}, #{userName}, #{role},#{emailProvider},#{nickName},#{userId});
+    </insert>
+</mapper>
