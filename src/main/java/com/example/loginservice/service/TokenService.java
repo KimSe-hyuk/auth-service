@@ -43,8 +43,8 @@ public class TokenService {
     }
 
     public ClaimsResponseDTO getAuthentication(String token) {
-        Authentication authentication = tokenProviderService.getAuthentication(token);
+        return tokenProviderService.getAuthentication(token);
 
-        return (ClaimsResponseDTO) authentication;
+
     }
 }

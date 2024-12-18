@@ -1,5 +1,6 @@
 package com.example.loginservice.config.jwt;
 
+import com.example.loginservice.dto.ClaimsResponseDTO;
 import com.example.loginservice.enums.Role;
 import com.example.loginservice.model.Member;
 import io.jsonwebtoken.*;
@@ -85,18 +86,12 @@ public class TokenProviderService {
 
 
     // 토큰 기반으로 인증 정보를 가져오는 메서드
-    public Authentication getAuthentication(String token) {
+    public ClaimsResponseDTO getAuthentication(String token) {
 
         Claims claims = getClaims(token);
 
-        // Clamis에서 역할을 추출하고 , GrantedAuthority로 변환
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority(String.valueOf(claims.get("role")))
-        );
 
-        User user = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(user,token,authorities);
+        return  ClaimsResponseDTO.builder().roles((List<String>) claims.get("role")).userId(claims.getSubject()).build();
     }
 
     private Claims getClaims(String token) {

@@ -18,18 +18,18 @@
         SELECT
             id,user_id,password, user_name, role
         FROM
-            member
+            user
         WHERE
             user_id = ${userId}
     </select>
     <select id="checkUserIdExist" parameterType="String" resultType="int">
         SELECT COUNT(id)
-        FROM member
+        FROM user
         WHERE user_id = #{userId}
     </select>
     <select id="checkNickNameExist" parameterType="String" resultType="int">
         SELECT COUNT(id)
-        FROM member
+        FROM user
         WHERE nick_name = #{nickName}
     </select>
     <select id="findEMailId"
@@ -38,18 +38,18 @@
         SELECT
            count(id)
         FROM
-            member
+            user
         WHERE
             user_name =  #{userName} and email_provider = #{emailProvider}
     </select>
     <insert id="saveUser"
             parameterType="Member">
-        INSERT INTO member (user_id, password, user_name, role,nick_name,email)
+        INSERT INTO user (user_id, password, user_name, role,nick_name,email)
         VALUES (#{userId}, #{password}, #{userName}, #{role},#{nickName},#{email});
     </insert>
     <insert id="saveEmailUser"
             parameterType="Member">
-        INSERT INTO member (user_id, user_name, role, email_provider, nick_name,email)
+        INSERT INTO user (user_id, user_name, role, email_provider, nick_name,email)
         VALUES (#{userId}, #{userName}, #{role},#{emailProvider},#{nickName},#{userId});
     </insert>
 </mapper>
