@@ -1,6 +1,6 @@
 package com.example.loginservice.service;
 
-import com.example.loginservice.dto.EmailSearchDTO;
+import com.example.loginservice.dto.EmailVerify.EmailSearchDTO;
 import com.example.loginservice.mapper.MemberMapper;
 import com.example.loginservice.model.Member;
 import lombok.RequiredArgsConstructor;

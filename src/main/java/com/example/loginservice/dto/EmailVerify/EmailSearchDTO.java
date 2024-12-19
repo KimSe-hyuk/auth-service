@@ -1,8 +1,7 @@
-package com.example.loginservice.dto;
+package com.example.loginservice.dto.EmailVerify;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Builder

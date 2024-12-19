@@ -93,3 +93,5 @@ naver:
   client-id: BNILOf9t1VA1AicXq92Q
   client-secret: pILIDjeE14
   redirect-url: http://localhost:7007/login
+app:
+  url: http://localhost:7007

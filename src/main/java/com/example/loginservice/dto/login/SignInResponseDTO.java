@@ -1,4 +1,4 @@
-package com.example.loginservice.dto;
+package com.example.loginservice.dto.login;
 
 import lombok.Builder;
 import lombok.Getter;

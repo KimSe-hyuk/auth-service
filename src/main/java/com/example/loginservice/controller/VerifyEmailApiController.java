@@ -3,12 +3,10 @@ package com.example.loginservice.controller;
 import com.example.loginservice.dto.EmailVerify.EmailRequestDTO;
 import com.example.loginservice.dto.EmailVerify.EmailVerityResponseDTO;
 import com.example.loginservice.dto.EmailVerify.VerificationRequestDTO;
+import com.example.loginservice.service.FindMemberService;
 import com.example.loginservice.service.SessionService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +29,19 @@ public class VerifyEmailApiController {
 
     private final JavaMailSender mailSender;
     private final SessionService sessionService;
+    private final FindMemberService findMemberService;
 
 
     // 인증번호 생성 및 이메일 전송
     @PostMapping("/send-verification-email")
     public EmailVerityResponseDTO sendVerificationEmail(@RequestHeader("Session-Id") String sessionId,@RequestBody EmailRequestDTO emailRequest) {
+        boolean checkEmail = findMemberService.checkEmail(emailRequest.getEmail());
+        if(checkEmail){
+            return EmailVerityResponseDTO.builder()
+                    .success(false)
+                    .message("이미있는 이메일입니다!")
+                    .build();
+        }
         System.out.println("이메일 발송");
         System.out.println("Session ID: " + sessionId);
 

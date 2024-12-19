@@ -17,14 +17,21 @@ public class UserDetailService implements UserDetailsService {
     private final MemberMapper memberMapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("사용자 인증 시작: " + username);
+
         Member member = memberMapper.findUserByUserId(username);
+
         if (member == null) {
-            throw new UsernameNotFoundException(username+" not found");
+            System.out.println("member is null for username: " + username);
+            throw new UsernameNotFoundException(username + " not found");
         }
+
+        System.out.println("member+ " + member.getUserId());
+
         return CustomUserDetails.builder()
                 .member(member)
-                .roles(
-                        List.of(String.valueOf(member.getRole()))
-                ).build();
+                .roles(List.of(String.valueOf(member.getRole())))
+                .build();
     }
+
 }

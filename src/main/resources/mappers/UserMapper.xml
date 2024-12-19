@@ -20,7 +20,8 @@
         FROM
             user
         WHERE
-            user_id = ${userId}
+            user_id = #{userId}
+
     </select>
     <select id="checkUserIdExist" parameterType="String" resultType="int">
         SELECT COUNT(id)
@@ -33,7 +34,7 @@
         WHERE nick_name = #{nickName}
     </select>
     <select id="findEMailId"
-            parameterType="com.example.loginservice.dto.EmailSearchDTO"
+            parameterType="com.example.loginservice.dto.EmailVerify.EmailSearchDTO"
             resultType="int">
         SELECT
            count(id)
@@ -52,4 +53,33 @@
         INSERT INTO user (user_id, user_name, role, email_provider, nick_name,email)
         VALUES (#{userId}, #{userName}, #{role},#{emailProvider},#{nickName},#{userId});
     </insert>
+    <select id="findEmail" parameterType="String" resultType="int">
+        SELECT
+            count(id)
+        FROM
+            user
+        WHERE
+            email=#{email}
+    </select>
+    <select id="findEmailId" parameterType="com.example.loginservice.dto.find.FindUserIdEmailRequestDTO" resultType="int">
+        SELECT
+            count(id)
+        FROM
+            user
+        WHERE
+            email=#{email} AND user_id=#{userId}
+    </select>
+    <select id="getUserId" parameterType="String" resultType="String">
+        SELECT
+           user_id
+        FROM
+            user
+        WHERE
+            email=#{email}
+    </select>
+    <update id="updatePassword" parameterType="com.example.loginservice.model.Member">
+        UPDATE user
+        SET password = #{password}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

@@ -1,22 +1,21 @@
-package com.example.loginservice.dto;
-
+package com.example.loginservice.dto.find;
 
 import com.example.loginservice.model.Member;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class memberJoinRequestDTO {
-    private String email;
+@Getter
+@Setter
+@Builder
+public class UpdatePwRequestDTO {
     private String password;
-    private String name;
-    private String nickName;
-    private String email_provider;
+    private String userId;
     public Member toMember(BCryptPasswordEncoder bCryptPasswordEncoder) {
         return Member.builder()
-                .userId(email)
+                .userId(userId)
                 .password(bCryptPasswordEncoder.encode(password))
-                .userName(name)
-                .nickName(nickName)
-                .emailProvider(email_provider)
                 .build();
     }
 }

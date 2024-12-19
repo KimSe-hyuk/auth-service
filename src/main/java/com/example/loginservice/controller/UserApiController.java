@@ -1,8 +1,8 @@
 package com.example.loginservice.controller;
 
-import com.example.loginservice.dto.JoinRequestDTO;
-import com.example.loginservice.dto.LoginRequestDTO;
-import com.example.loginservice.dto.SignInResponseDTO;
+import com.example.loginservice.dto.login.JoinRequestDTO;
+import com.example.loginservice.dto.login.LoginRequestDTO;
+import com.example.loginservice.dto.login.SignInResponseDTO;
 import com.example.loginservice.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +37,6 @@ public class UserApiController {
     public boolean checkNickName(@RequestBody String nickName){
         return memberService.checkNickName(nickName);
     }
+
 
 }

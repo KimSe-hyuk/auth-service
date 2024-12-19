@@ -5,7 +5,7 @@ import com.example.loginservice.config.jwt.TokenProviderService;
 import com.example.loginservice.config.security.CustomUserDetails;
 import com.example.loginservice.mapper.MemberMapper;
 import com.example.loginservice.model.Member;
-import com.example.loginservice.dto.SignInResponseDTO;
+import com.example.loginservice.dto.login.SignInResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,16 +34,18 @@ public class MemberService {
 
     // 기존 로그인 처리 메서드
     public SignInResponseDTO signIn(String username, String password) {
+        System.out.println("username"+username);
+        System.out.println("password"+password);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        System.out.println("인증");
         Member member = ((CustomUserDetails) authentication.getPrincipal()).getMember();
-
+        System.out.println("member");
         // Access Token
         String accessToken = tokenProviderService.generateToken(member, Duration.ofHours(2));
-
+        System.out.println("accessToken");
         // Refresh Token
         String refreshToken = tokenProviderService.generateToken(member, Duration.ofDays(2));
 

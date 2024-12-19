@@ -1,12 +1,11 @@
 package com.example.loginservice.service;
 
 import com.example.loginservice.config.jwt.TokenProviderService;
-import com.example.loginservice.dto.ClaimsResponseDTO;
-import com.example.loginservice.dto.RefreshTokenResponseDTO;
-import com.example.loginservice.dto.ValidTokenResponseDTO;
+import com.example.loginservice.dto.token.ClaimsResponseDTO;
+import com.example.loginservice.dto.token.RefreshTokenResponseDTO;
+import com.example.loginservice.dto.token.ValidTokenResponseDTO;
 import com.example.loginservice.model.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

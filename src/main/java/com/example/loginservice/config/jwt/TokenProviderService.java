@@ -1,22 +1,17 @@
 package com.example.loginservice.config.jwt;
 
-import com.example.loginservice.dto.ClaimsResponseDTO;
+import com.example.loginservice.dto.token.ClaimsResponseDTO;
 import com.example.loginservice.enums.Role;
 import com.example.loginservice.model.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

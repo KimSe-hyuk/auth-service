@@ -2,7 +2,7 @@ package com.example.loginservice.controller;
 
 
 
-import com.example.loginservice.dto.*;
+import com.example.loginservice.dto.token.*;
 import com.example.loginservice.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
