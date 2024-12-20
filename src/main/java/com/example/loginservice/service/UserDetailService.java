@@ -16,17 +16,18 @@ import java.util.List;
 public class UserDetailService implements UserDetailsService {
     private final MemberMapper memberMapper;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("사용자 인증 시작: " + username);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        System.out.println("사용자 인증 시작: " + userId);
 
-        Member member = memberMapper.findUserByUserId(username);
+        Member   member = memberMapper.findUserByUserId(userId);
 
-        if (member == null) {
-            System.out.println("member is null for username: " + username);
-            throw new UsernameNotFoundException(username + " not found");
-        }
+            if (member == null) {
+                System.out.println("member is null for username: " + userId);
+                throw new UsernameNotFoundException(userId + " not found");
+            }
 
-        System.out.println("member+ " + member.getUserId());
+            System.out.println("member+ " + member.getUserId());
+
 
         return CustomUserDetails.builder()
                 .member(member)

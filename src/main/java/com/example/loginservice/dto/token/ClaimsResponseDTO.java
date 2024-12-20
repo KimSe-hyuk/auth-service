@@ -9,5 +9,5 @@ import java.util.List;
 @Builder
 public class ClaimsResponseDTO {
     private String userId;
-    private List<String> roles;
+    private String roles;
 }

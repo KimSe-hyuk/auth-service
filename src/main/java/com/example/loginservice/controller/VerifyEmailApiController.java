@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/verity")
+@RequestMapping("/auth/verity")
 @RequiredArgsConstructor
 public class VerifyEmailApiController {
 

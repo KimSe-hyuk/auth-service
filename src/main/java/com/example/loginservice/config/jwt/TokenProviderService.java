@@ -86,7 +86,7 @@ public class TokenProviderService {
         Claims claims = getClaims(token);
 
 
-        return  ClaimsResponseDTO.builder().roles((List<String>) claims.get("role")).userId(claims.getSubject()).build();
+        return  ClaimsResponseDTO.builder().roles((String) claims.get("role")).userId(claims.getSubject()).build();
     }
 
     private Claims getClaims(String token) {

@@ -22,7 +22,7 @@ import java.time.Duration;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/find/user")
+@RequestMapping("/auth/find/user")
 public class FindUserAPIController {
 
     @Value("${spring.mail.username}")
