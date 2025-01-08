@@ -17,4 +17,6 @@ public interface MemberMapper {
     int findEmailId(FindUserIdEmailRequestDTO emailUserId);
     int updatePassword(Member member);
     String getUserId(String email);
+
+    Member memberDetail(String userId);
 }

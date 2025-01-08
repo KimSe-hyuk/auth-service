@@ -38,5 +38,10 @@ public class TokenApiController {
         log.info("Claims");
         return tokenService.getAuthentication(claimsRequestDTO.getToken());
     }
+    @PostMapping("/loginDetail")
+    public MemberDetailTokenResponseDTO loginDetail(@RequestBody ClaimsRequestDTO claimsRequestDTO) {
+        log.info("loginDetail");
+        return tokenService.loginDetail(claimsRequestDTO.getToken());
+    }
 
 }

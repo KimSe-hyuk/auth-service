@@ -21,7 +21,9 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostMapping("/login")
     public SignInResponseDTO registerUser(@RequestBody LoginRequestDTO userRegistrationDTO) {
-        return  memberService.signIn(userRegistrationDTO.getUserId(), userRegistrationDTO.getPassword());
+        SignInResponseDTO signInResponseDTO = memberService.signIn(userRegistrationDTO.getUserId(), userRegistrationDTO.getPassword());
+        System.out.println(signInResponseDTO.isLoggedIn());
+        return signInResponseDTO;
     }
     @PostMapping("/join")
     public ResponseEntity<String> joinUser(@RequestBody JoinRequestDTO joinRequestDTO) {
@@ -38,6 +40,5 @@ public class UserApiController {
     public boolean checkNickName(@RequestBody String nickName){
         return memberService.checkNickName(nickName);
     }
-
 
 }

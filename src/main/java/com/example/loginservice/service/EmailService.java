@@ -5,12 +5,13 @@ import com.example.loginservice.mapper.MemberMapper;
 import com.example.loginservice.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class EmailService {
     private final MemberMapper memberMapper;
-
+    @Transactional
     public void insertMember(Member member) {
         // 이메일 중복 체크
         if (emailCheck(member.getUserName(),member.getEmailProvider())) {
@@ -21,7 +22,7 @@ public class EmailService {
             memberMapper.saveEmailUser(member);
         }
     }
-
+    @Transactional(readOnly = true)
     public boolean emailCheck(String emailId,String emailProvider) {
         EmailSearchDTO build = EmailSearchDTO.builder()
                 .emailProvider(emailProvider)

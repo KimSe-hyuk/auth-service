@@ -59,7 +59,7 @@ public class FindUserAPIController {
         boolean checkEmail = findMemberService.checkEmailUserId(userIdEmailRequestDto);
         if(checkEmail){
             String token = tokenProviderService.generateToken(Member.builder().userId(userIdEmailRequestDto.getUserId()).role(Role.ROLE_USER).build(), Duration.ofMinutes(30));
-            String resetLink =appUrl + "/reset-password?token=" + token;
+            String resetLink = appUrl + "/reset-password?token=" + token;
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
 

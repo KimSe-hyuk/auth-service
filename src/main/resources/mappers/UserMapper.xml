@@ -24,6 +24,16 @@
         WHERE
             user_id = #{userId}
     </select>
+    <select id="memberDetail"
+            parameterType="String"
+            resultMap="userResultMap">
+        SELECT
+            id,user_id,user_name, password,nick_name,email_provider ,email, role
+        FROM
+            user
+        WHERE
+            user_id = #{userId}
+    </select>
     <select id="checkUserIdExist" parameterType="String" resultType="int">
         SELECT COUNT(id)
         FROM user
