@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -32,7 +33,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final TokenProviderService tokenProviderService;
     private final OAuth2AuthorizedClientService authorizedClientService;
-
+    @Value("${return.redirect-url}")
+    String redirectURL;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
@@ -74,7 +76,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         setCookie(response, "refreshToken", refreshToken);
 
 // 프론트엔드 콜백 URL로 리디렉션
-        String redirectUrl = "http://localhost:7007/login/callback"; // 프론트엔드 콜백 URL
+        String redirectUrl = redirectURL+"/login/callback"; // 프론트엔드 콜백 URL
         response.sendRedirect(redirectUrl);
     }
     private void setCookie(HttpServletResponse response, String cookieName, String token) {

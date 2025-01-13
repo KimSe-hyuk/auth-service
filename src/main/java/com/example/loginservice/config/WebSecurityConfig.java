@@ -4,6 +4,7 @@ import com.example.loginservice.config.security.CustomAuthenticationSuccessHandl
 import com.example.loginservice.config.security.CustomOAuth2LogoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.filters.CorsFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,8 @@ public class WebSecurityConfig {
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomOAuth2LogoutHandler oauth2LogoutHandler;
     private final CorsConfigurationSource corsConfigurationSource;
+    @Value("${return.redirect-url}")
+    String redirectURL;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +50,7 @@ public class WebSecurityConfig {
                         .loginPage("/login")  // 로그인 페이지 설정
                         .successHandler(customAuthenticationSuccessHandler) // 로그인 성공 시 처리
                         .permitAll()  // OAuth2 로그인 URL은 누구나 접근 가능
-                        .failureUrl("http://localhost:7007/login") // 로그인 실패 시 처리할 페이지
+                        .failureUrl(redirectURL+"/login") // 로그인 실패 시 처리할 페이지
                         .loginPage("/login") // OAuth2 로그인 페이지 설정
                 )
                 .logout(logout -> logout

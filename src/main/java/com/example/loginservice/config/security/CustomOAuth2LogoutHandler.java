@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,15 @@ import java.io.IOException;
 public class CustomOAuth2LogoutHandler implements LogoutHandler {
     private final NaverConfig naverConfig;
     private final OAuth2AuthorizedClientService authorizedClientService;
-
+    @Value("${return.redirect-url}")
+    private String redirectURL;
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        String redirectUrl = "http://localhost:7007/login"; // 기본 리디렉션 URL
+        String redirectUrl =redirectURL+"/login"; // 기본 리디렉션 URL
         System.out.println("로그아웃 시작");
 
         if (authentication instanceof OAuth2AuthenticationToken oAuth2Token) {
@@ -92,7 +94,7 @@ public class CustomOAuth2LogoutHandler implements LogoutHandler {
      */
     private String handleGoogleLogout() {
         System.out.println("Google 로그아웃은 사용자 브라우저에서 직접 처리됩니다.");
-        return "http://localhost:7007/login";
+        return redirectURL+"/login";
     }
 
     /**

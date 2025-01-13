@@ -28,11 +28,19 @@ spec:
             - containerPort: 7010
           env:
             - name: REDIS_HOST_URL
-              value: 10.0.1.228
+              value: 10.0.3.65
             - name: REDIRECT_URL
-              value: a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80
             - name: DB_MASTER_URL
-              value: 10.0.1.228:3306
+              value: jdbc:mysql://10.0.3.65:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
             - name: DB_SLAVE_URL
-              value: 10.0.1.209:3306
+              value: jdbc:mysql://10.0.3.28:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+            - name: DB_SLAVE_NAME
+              value: replica_user
 
+            - name: GOOGLE_REDIRECT_URL
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/google
+            - name: NAVER_REDIRECT_URL
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/naver
+            - name: KAKAO_REDIRECT_URL
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/kakao
