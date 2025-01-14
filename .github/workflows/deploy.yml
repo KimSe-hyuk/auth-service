@@ -1,53 +1,42 @@
-name: CI/CD for Spring Boot to EKS
+name: CI/CD for EKS
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 트리거
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     steps:
-      # 1. 소스 코드 체크아웃
-      - name: Checkout code
+      # 1. 코드 체크아웃
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # 2. AWS CLI 인증 구성
+      # 2. AWS CLI 인증 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2  # EKS 클러스터가 있는 리전
+          aws-region: ap-northeast-2
 
-      # 3. Docker 로그인 (ECR)
+      # 3. ECR 로그인
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
       # 4. Docker 이미지 빌드 및 푸시
-      - name: Build and Push Docker Image to ECR
-        env:
-          REPOSITORY_URI: 879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service
+      - name: Build and Push Docker Image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          IMAGE_URI=${REPOSITORY_URI}:${IMAGE_TAG}
-          echo "Building and pushing Docker image to $IMAGE_URI"
+          IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/my-app:${IMAGE_TAG}
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
-      # 5. EKS 클러스터 kubeconfig 업데이트
-      - name: Update kubeconfig for EKS
-        run: |
-          aws eks update-kubeconfig --region ap-northeast-2 --name my-cluster
-
-      # 6. Kubernetes Deployment 업데이트
+      # 5. Kubernetes Deployment 업데이트
       - name: Update Kubernetes Deployment
-        env:
-          REPOSITORY_URI: 879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service
         run: |
           IMAGE_TAG=${{ github.sha }}
-          IMAGE_URI=${REPOSITORY_URI}:${IMAGE_TAG}
-          echo "Updating Kubernetes Deployment to use image $IMAGE_URI"
-          kubectl set image deployment/login-service login-service=$IMAGE_URI
+          IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/my-app:${IMAGE_TAG}
+          kubectl set image deployment/my-app my-app=$IMAGE_URI
