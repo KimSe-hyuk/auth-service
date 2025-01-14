@@ -4,8 +4,9 @@ metadata:
   name: login-service
   labels:
     app: login-service
+
 spec:
-  replicas: 1
+  replicas: 1  # 필요한 경우 적절히 스케일링
   selector:
     matchLabels:
       app: login-service
@@ -16,31 +17,39 @@ spec:
     spec:
       containers:
         - name: login-service
-          # ECR 이미지 주소로 수정
+          # ECR 이미지 주소 (최신 이미지 사용)
           image: 879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service:latest
-          # EKS에서는 Always를 권장
+          # Always로 설정하여 항상 최신 이미지를 가져옴
           imagePullPolicy: Always
           lifecycle:
             preStop:
               exec:
+                # 종료 전 5초 대기
                 command: [ "sh", "-c", "sleep 5" ]
           ports:
-            - containerPort: 7010
+            - containerPort: 7010  # 애플리케이션 노출 포트
           env:
+            # Redis 설정
             - name: REDIS_HOST_URL
-              value: 10.0.3.65
-            - name: REDIRECT_URL
-              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80
-            - name: DB_MASTER_URL
-              value: jdbc:mysql://10.0.3.65:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-            - name: DB_SLAVE_URL
-              value: jdbc:mysql://10.0.3.28:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-            - name: DB_SLAVE_NAME
-              value: replica_user
+              value: redis-service
 
+            # 공용 도메인
+            - name: REDIRECT_URL
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com
+
+            # 데이터베이스 연결 정보
+            - name: DB_MASTER_URL
+              value: jdbc:mysql://mysql-service:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+            - name: DB_SLAVE_URL
+              value: jdbc:mysql://mysql-service:3306/deliveryservice?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+            #            - name: DB_SLAVE_NAME
+            #              value: replica_user
+
+            # OAuth Redirect URL
             - name: GOOGLE_REDIRECT_URL
-              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/google
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com/login/oauth2/code/google
             - name: NAVER_REDIRECT_URL
-              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/naver
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com/login/oauth2/code/naver
             - name: KAKAO_REDIRECT_URL
-              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com:80/login/oauth2/code/kakao
+              value: https://a997c41d8abfa42e5adb4f613299f96c-1177132565.ap-northeast-2.elb.amazonaws.com/login/oauth2/code/kakao
