@@ -3,7 +3,7 @@ name: CI/CD for EKS
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시될 때만 트리거
 
 jobs:
   deploy:
@@ -26,17 +26,26 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      # 4. Docker 이미지 빌드 및 푸시
+      # 4. ECR 레포지토리 생성 (존재하지 않을 경우)
+      - name: Create ECR Repository if not exists
+        run: |
+          aws ecr describe-repositories --repository-names login-service --region ap-northeast-2 || \
+          aws ecr create-repository --repository-name login-service --region ap-northeast-2
+
+      # 5. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/my-app:${IMAGE_TAG}
+          IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service:${IMAGE_TAG}
+          echo "Building Docker image: $IMAGE_URI"
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
-      # 5. Kubernetes Deployment 업데이트
+      # 6. Kubernetes Deployment 업데이트
       - name: Update Kubernetes Deployment
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_URI: 879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service:${{ github.sha }}
         run: |
-          IMAGE_TAG=${{ github.sha }}
-          IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/my-app:${IMAGE_TAG}
-          kubectl set image deployment/my-app my-app=$IMAGE_URI
+          echo "Updating Kubernetes Deployment with image: $IMAGE_URI"
+          kubectl set image deployment/login-service login-service=$IMAGE_URI --record
