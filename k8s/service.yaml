@@ -2,14 +2,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: login-service
+
 spec:
   selector:
     app: login-service
   ports:
     - name: http  # 일반 HTTP API 포트 이름
+#    - protocol: TCP  # 일반 HTTP API 포트 이름
       port: 80
       targetPort: 7010
-    - name: actuator  # Actuator 포트 이름
-      port: 8081
-      targetPort: 8081
+#    - name: actuator  # Actuator 포트 이름
+#      port: 8081
+#      targetPort: 8081
   type: ClusterIP  # 필요 시 LoadBalancer로 변경 가능

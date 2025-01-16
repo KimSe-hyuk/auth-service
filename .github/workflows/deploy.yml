@@ -21,17 +21,22 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+      # 3. ECR 리포지토리 생성 (존재하지 않을 경우)
+      - name: Create ECR Repository
+        run: |
+          aws ecr describe-repositories --repository-names login-service || \
+          aws ecr create-repository --repository-name login-service
 
-      # 3. Configure kubectl (Kubeconfig 설정)
+      # 4. Configure kubectl (Kubeconfig 설정)
       - name: Configure kubectl
         run: |
           aws eks update-kubeconfig --region ap-northeast-2 --name polar-kim
 
-      # 4. ECR 로그인
+      # 5. ECR 로그인
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      # 5. Docker 이미지 빌드 및 푸시
+      # 6. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
           IMAGE_TAG=${{ github.sha }}
@@ -39,9 +44,9 @@ jobs:
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
-      # 6. Kubernetes Deployment 업데이트
+      # 7. Kubernetes Deployment 업데이트
       - name: Update Kubernetes Deployment
         run: |
           IMAGE_TAG=${{ github.sha }}
           IMAGE_URI=879381276515.dkr.ecr.ap-northeast-2.amazonaws.com/login-service:${IMAGE_TAG}
-          kubectl set image deployment/login-service login-service=$IMAGE_URI --record
+          kubectl set image deployment/login-service login-service=$IMAGE_URI 
