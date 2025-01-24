@@ -19,7 +19,6 @@ spring:
     user: ${spring.datasource.replication.username}
     password: ${spring.datasource.replication.password}
     url: ${spring.datasource.replication.write.url}
-
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 10
@@ -120,5 +119,3 @@ management:
       access: unrestricted
   server:
     port: 8081
-
-
