@@ -67,7 +67,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         // JWT 토큰 생성
         String accessToken = tokenProviderService.generateToken(member, Duration.ofHours(2));
-        String refreshToken = tokenProviderService.generateToken(member, Duration.ofDays(2));
+        String refreshToken = tokenProviderService.generateToken(member, Duration.ofDays(1));
         System.out.println("Refresh Token: " + refreshToken);
         System.out.println("accessToken: " + accessToken);
 

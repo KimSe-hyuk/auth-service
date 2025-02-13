@@ -22,8 +22,13 @@ public class FindMemberService {
     }
     @Transactional
     public boolean resetPw(Member member) {
-       return 0< memberMapper.updatePassword(member);
+        System.out.println("🔍 updatePassword 실행 - userId: " + member.getUserId());
+        System.out.println("🔍 updatePassword 실행 - password: " + member.getPassword());
+        int result = memberMapper.updatePassword(member);
+        System.out.println("🔍 updatePassword 결과: " + result);
+        return result > 0;
     }
+
     @Transactional(readOnly = true)
     public boolean checkEmailUserId(FindUserIdEmailRequestDTO userIdEmailRequestDto) {
         return 0<memberMapper.findEmailId(userIdEmailRequestDto);

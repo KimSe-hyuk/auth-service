@@ -38,57 +38,45 @@ public class MemberService {
     // 기존 로그인 처리 메서드
     public SignInResponseDTO signIn(String userId, String password) {
         System.out.println("아이디: " + userId);
-        System.out.println("비밀번호: " + password);
-
+        Member a = memberMapper.findUserByUserId(userId);
         try {
-            // 사용자 인증 시도
+            Member member = memberMapper.findUserByUserId(userId);
+            if (member == null) {
+                System.out.println("❌ 사용자 없음: " + userId);
+                return SignInResponseDTO.builder().isLoggedIn(false).build();
+            }
+            // 🚀 로그인 시 비밀번호 비교
+            boolean passwordMatches = bCryptPasswordEncoder.matches(password, member.getPassword());
+
+
+            if (!passwordMatches) {
+                return SignInResponseDTO.builder().isLoggedIn(false).build();
+            }
+
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userId, password)
+                    new UsernamePasswordAuthenticationToken(userId, password) // 🚨 여기서 문제가 발생할 가능성 있음
             );
 
-            // 인증 후 SecurityContext에 인증 정보를 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("인증 성공");
+            System.out.println("✅ 인증 성공");
 
-            // 인증된 사용자 정보 가져오기
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-            Member member = customUserDetails.getMember();
+            Member authenticatedMember = customUserDetails.getMember();
 
-            // 인증된 사용자 정보 출력
-            System.out.println("인증된 회원 정보: " + member.getUserId());
+            String accessToken = tokenProviderService.generateToken(authenticatedMember, Duration.ofHours(2));
+            String refreshToken = tokenProviderService.generateToken(authenticatedMember, Duration.ofDays(2));
 
-            // Access Token 생성
-            String accessToken = tokenProviderService.generateToken(member, Duration.ofHours(2));
-            System.out.println("Access Token 생성 완료");
-
-            // Refresh Token 생성
-            String refreshToken = tokenProviderService.generateToken(member, Duration.ofDays(2));
-            System.out.println("Refresh Token 생성 완료");
-
-            // 로그인 성공 응답 반환
             return SignInResponseDTO.builder()
                     .isLoggedIn(true)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
         } catch (BadCredentialsException e) {
-            // 인증 실패 시 SignInResponseDTO 반환
-            System.out.println("인증 실패: 잘못된 아이디나 비밀번호");
-
-            return SignInResponseDTO.builder()
-                    .isLoggedIn(false)
-                    .accessToken(null)
-                    .refreshToken(null)
-                    .build();
+            System.out.println("❌ 인증 실패: 잘못된 아이디나 비밀번호");
+            return SignInResponseDTO.builder().isLoggedIn(false).build();
         } catch (Exception e) {
-            // 기타 예외 처리 시 SignInResponseDTO 반환
-            System.out.println("인증 오류 발생: " + e.getMessage());
-
-            return SignInResponseDTO.builder()
-                    .isLoggedIn(false)
-                    .accessToken(null)
-                    .refreshToken(null)
-                    .build();
+            System.out.println("❌ 인증 오류 발생: " + e.getMessage());
+            return SignInResponseDTO.builder().isLoggedIn(false).build();
         }
     }
 

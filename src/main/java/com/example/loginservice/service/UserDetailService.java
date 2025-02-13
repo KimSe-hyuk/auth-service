@@ -21,15 +21,13 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         System.out.println("사용자 인증 시작: " + userId);
 
-        Member   member = memberMapper.findUserByUserId(userId);
+        Member member = memberMapper.findUserByUserId(userId);
+        if (member == null) {
+            System.out.println("❌ member is null for username: " + userId);
+            throw new UsernameNotFoundException(userId + " not found");
+        }
 
-            if (member == null) {
-                System.out.println("member is null for username: " + userId);
-                throw new UsernameNotFoundException(userId + " not found");
-            }
-
-            System.out.println("member+ " + member.getUserId());
-
+        System.out.println("🔍 DB에서 가져온 비밀번호 해시: " + member.getPassword());
 
         return CustomUserDetails.builder()
                 .member(member)
